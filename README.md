@@ -29,4 +29,4 @@ spring.jackson.time-zone=GMT+8
 
 配置后，返回给前端的时间格式如下：
 
-![image-20240714224757826](images\2.png)
+![image-20240714224757826](images/2.png)

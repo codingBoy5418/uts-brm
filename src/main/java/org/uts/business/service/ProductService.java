@@ -1,5 +1,6 @@
 package org.uts.business.service;
 
+import org.uts.business.domain.vo.BatchAddProductVo;
 import org.uts.business.domain.vo.ProductPageVo;
 import org.uts.business.domain.vo.ProductVo;
 
@@ -18,12 +19,32 @@ public interface ProductService {
     List<ProductVo> productPage(ProductPageVo productPageVo);
 
     /*
-     * 添加商品信息
-     */
-    int addProduct(ProductVo productVo);
-
-    /*
      * 查询商品详情信息
      */
     public ProductVo selectById(Long id);
+
+    /*
+     * 添加商品信息
+     */
+    Long addProduct(ProductVo productVo);
+
+    /*
+     * 添加商品信息 - 批量
+     */
+    List<Long> batchAddProduct(BatchAddProductVo batchAddProductVo);
+
+    /*
+     * 删除商品信息
+     */
+    public int deleteProductById(Long id);
+
+    /*
+     * 删除商品信息 - 批量
+     */
+    public int batchDeleteProduct(List<Long> idList);
+
+    /*
+     * 更新商品信息
+     */
+    public Long updateProduct(ProductVo productVo);
 }

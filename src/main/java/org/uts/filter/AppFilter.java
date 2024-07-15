@@ -51,7 +51,8 @@ public class AppFilter implements Filter {
         HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
 
         //打印请求URI
-        log.info("request-url: " + httpServletRequest.getRequestURL());
+        log.info("request-url: " + httpServletRequest.getMethod().toUpperCase() + " " + httpServletRequest.getRequestURL());
+
         ContextHolder.appContext.set(System.currentTimeMillis());
 
     }
@@ -75,10 +76,10 @@ public class AppFilter implements Filter {
         Long postTime = System.currentTimeMillis();
         long costTime = (postTime - preTime) / 1000;
         if(costTime > 3){
-            log.info("request-url: " + httpServletRequest.getRequestURL() + " request takes too long, time: " + costTime + " seconds ...");
+            log.info("request-url: " + httpServletRequest.getMethod().toUpperCase() + " " + httpServletRequest.getRequestURL() + " request takes too long, time: " + costTime + " seconds ...");
         }
         else {
-            log.info("request-url: " + httpServletRequest.getRequestURL() + " return ...");
+            log.info("request-url: " + httpServletRequest.getMethod().toUpperCase() + " " + httpServletRequest.getRequestURL() + " return ...");
         }
     }
 

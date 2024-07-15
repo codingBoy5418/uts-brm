@@ -16,6 +16,8 @@
 
 ## 4 注意事项
 
+### 4.1 时间的设置
+
 注意时间的配置，数据库中为timestamp类型，代码中为Date类型，直接返回给前端时，显示如下：
 
 ![1.png](images/1.png)
@@ -30,3 +32,8 @@ spring.jackson.time-zone=GMT+8
 配置后，返回给前端的时间格式如下：
 
 ![image-20240714224757826](images/2.png)
+
+### 4.2 批量插入MySQL动态SQL
+
+[Java书签 #解锁MyBatis的4种批量插入方式及ID返回姿势_mybatis 批量插入如何获取id-CSDN博客](https://blog.csdn.net/itanping/article/details/113405113)
+

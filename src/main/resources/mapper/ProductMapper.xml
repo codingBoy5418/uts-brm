@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.uts.business.mapper.ProductMapper">
 
-    <!--  查询用户信息 - 分页  -->
+    <!--  查询商品信息 - 分页  -->
     <select id="selectProduct" resultType="org.uts.business.domain.dto.ProductDto">
         SELECT
         `ID`,
@@ -23,10 +23,28 @@
         <if test="name!=null and name!=''">
             AND `NAME` LIKE CONCAT('%', #{name} ,'%')
         </if>
+        ORDER BY UPDATE_TIME DESC
     </select>
 
-    <!--  查询用户信息 - 分页  -->
-    <insert id="addProduct" keyColumn="ID" keyProperty="id" parameterType="org.uts.business.domain.dto.ProductDto" useGeneratedKeys="true">
+    <!--  查询商品信息 - 详情  -->
+    <select id="selectById" resultType="org.uts.business.domain.dto.ProductDto">
+        SELECT
+        `ID`,
+        `NAME`,
+        `PRICE`,
+        `STOCK`,
+        `IMAGE`,
+        `DESC`,
+        `CREATE_TIME`,
+        `UPDATE_TIME`
+        FROM
+        product
+        WHERE `ID`=#{id}
+    </select>
+
+    <!--  添加商品信息  -->
+    <insert id="addProduct" keyColumn="ID" keyProperty="id" parameterType="org.uts.business.domain.dto.ProductDto"
+            useGeneratedKeys="true">
         INSERT INTO product
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -47,8 +65,8 @@
             <if test="desc != null and desc != ''">
                 `DESC`,
             </if>
-                `CREATE_TIME`,
-                `UPDATE_TIME`
+            `CREATE_TIME`,
+            `UPDATE_TIME`
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -74,18 +92,74 @@
         </trim>
     </insert>
 
-    <select id="selectById" resultType="org.uts.business.domain.dto.ProductDto">
-        SELECT
-        `ID`,
-        `NAME`,
-        `PRICE`,
-        `STOCK`,
-        `IMAGE`,
-        `DESC`,
-        `CREATE_TIME`,
-        `UPDATE_TIME`
-        FROM
-        product
-        WHERE `ID`=#{id}
-    </select>
+    <!--  添加商品信息 - 批量  -->
+    <insert id="batchAddProduct" parameterType="org.uts.business.domain.dto.ProductDto" keyColumn="id" keyProperty="productDtoList.id" useGeneratedKeys="true">
+        INSERT INTO product (`NAME`, `PRICE`, `STOCK`, `IMAGE`, `DESC`, `CREATE_TIME`, `UPDATE_TIME`)
+        VALUES
+        <foreach collection="productDtoList" item="item" index="index" separator=",">
+            <if test="item != null">
+                <trim prefix="(" suffix=")" suffixOverrides=",">
+                    <if test="item.name != null">
+                        #{item.name,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.price != null">
+                        #{item.price,jdbcType=INTEGER},
+                    </if>
+                    <if test="item.stock != null">
+                        #{item.stock,jdbcType=INTEGER},
+                    </if>
+                    <if test="item.image != null">
+                        #{item.image,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.desc != null">
+                        #{item.desc,jdbcType=VARCHAR},
+                    </if>
+                    NOW(),
+                    NOW()
+                </trim>
+            </if>
+        </foreach>
+    </insert>
+
+    <!--  删除商品信息  -->
+    <delete id="deleteProductById">
+        DELETE FROM product WHERE `ID`=#{id}
+    </delete>
+
+    <!--  删除商品信息 - 批量 -->
+    <delete id="batchDeleteProduct">
+        DELETE FROM product WHERE 1=1
+        <if test="idList != null and idList.size()>0">
+            AND ID IN
+            <foreach collection="idList" open="(" close=")" separator="," item="id">
+                #{id}
+            </foreach>
+        </if>
+    </delete>
+
+    <!--  更新商品信息 -->
+    <update id="updateProduct" parameterType="org.uts.business.domain.dto.ProductDto">
+        UPDATE product
+        <set>
+            <if test="name != null and name != ''">
+                `NAME` = #{name},
+            </if>
+            <if test="price != null">
+                `PRICE` = #{price},
+            </if>
+            <if test="stock != null">
+                `STOCK` = #{stock},
+            </if>
+            <if test="image != null and image != ''">
+                IMAGE = #{image},
+            </if>
+            <if test="desc != null">
+                DESC = #{desc},
+            </if>
+            UPDATE_TIME = NOW()
+        </set>
+        where ID = #{id}
+    </update>
+
+
 </mapper>
